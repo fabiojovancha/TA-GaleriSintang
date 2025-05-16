@@ -1,62 +1,43 @@
-# Build frontend (Vue + Inertia) dengan Node
-FROM node:20-alpine as node-build
+FROM php:8.1-fpm
 
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-RUN npm run build
-
-
-# Laravel + PHP setup
-FROM php:8.2-fpm-alpine
-
-# Install system dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    libpng \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
     libzip-dev \
     zip \
-    unzip \
-    oniguruma-dev \
-    icu-dev \
+    libpng-dev \
+    libonig-dev \
     libxml2-dev \
-    git \
-    mysql-client \
-    nodejs \
-    npm
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath intl
+    curl \
+    && docker-php-ext-install pdo_mysql zip mbstring exif pcntl bcmath gd
 
 # Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 # Copy project files
 COPY . .
 
-# Copy built frontend from Node image
-COPY --from=node-build /app/public/js /var/www/public/js
-COPY --from=node-build /app/public/css /var/www/public/css
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Install node & npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
+# Install npm packages & build frontend
+RUN npm install && npm run prod
+
+# Generate optimized autoload files
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Run Laravel setup commands
-RUN composer install --no-dev --optimize-autoloader \
- && php artisan config:cache \
- && php artisan route:cache \
- && php artisan view:cache
+# Expose port 9000 and start PHP-FPM server
+EXPOSE 9000
 
-EXPOSE 8000
-
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php-fpm"]
