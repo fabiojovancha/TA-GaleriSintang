@@ -1,0 +1,43 @@
+# Gunakan image PHP dengan FPM
+FROM php:8.2-fpm
+
+# Install dependensi OS & ekstensi PHP yang dibutuhkan Laravel
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    zip \
+    unzip \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    npm \
+    nodejs \
+    libpq-dev \
+    libjpeg-dev \
+    libfreetype6-dev
+
+# Install ekstensi PHP
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl gd
+
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www
+
+# Copy seluruh project
+COPY . .
+
+# Install dependensi Laravel dan build asset Inertia (Vue)
+RUN composer install --no-dev --optimize-autoloader
+RUN npm install && npm run build
+
+# Set permission Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Expose port (Render akan mengakses dari sini)
+EXPOSE 8000
+
+# Jalankan Laravel menggunakan PHP built-in server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
