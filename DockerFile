@@ -1,6 +1,6 @@
 FROM php:8.1-fpm
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -19,27 +19,31 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy project files
+# Copy all project files
 COPY . .
 
-# Pastikan folder storage dan bootstrap/cache ada
-RUN mkdir -p storage/framework/views storage/framework/cache storage/logs bootstrap/cache
+# Ensure fresh storage & cache directories
+RUN rm -rf storage bootstrap/cache \
+    && mkdir -p storage/framework/{cache,sessions,testing,views} storage/logs bootstrap/cache
 
-# Install PHP dependencies tanpa dev dan optimize autoloader
-RUN composer install --no-dev --optimize-autoloader
-
-# Install npm packages & build frontend
-RUN npm install && npm run prod
-
-# Cache config, routes, views supaya lebih cepat
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
-
-# Set permission supaya www-data bisa tulis di storage dan bootstrap/cache
+# Set correct permissions
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Expose port 9000 (php-fpm)
+# Install PHP dependencies (optimize autoload, no dev)
+RUN composer install --no-dev --optimize-autoloader
+
+# Install and build frontend
+RUN npm install && npm run prod
+
+# Laravel optimize
+RUN php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache \
+    && php artisan storage:link
+
+# Expose PHP-FPM port
 EXPOSE 9000
 
-# Start php-fpm server
+# Start PHP-FPM
 CMD ["php-fpm"]
