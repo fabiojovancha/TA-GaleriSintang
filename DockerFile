@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     curl \
+    nodejs npm \
     && docker-php-ext-install pdo_mysql zip mbstring exif pcntl bcmath gd
 
 # Install Composer
@@ -21,23 +22,24 @@ WORKDIR /var/www/html
 # Copy project files
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Pastikan folder storage dan bootstrap/cache ada
+RUN mkdir -p storage/framework/views storage/framework/cache storage/logs bootstrap/cache
 
-# Install node & npm
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+# Install PHP dependencies tanpa dev dan optimize autoloader
+RUN composer install --no-dev --optimize-autoloader
 
 # Install npm packages & build frontend
 RUN npm install && npm run prod
 
-# Generate optimized autoload files
+# Cache config, routes, views supaya lebih cepat
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Set permission supaya www-data bisa tulis di storage dan bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-# Expose port 9000 and start PHP-FPM server
+# Expose port 9000 (php-fpm)
 EXPOSE 9000
 
+# Start php-fpm server
 CMD ["php-fpm"]
