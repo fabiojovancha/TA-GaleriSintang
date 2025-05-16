@@ -79,6 +79,14 @@ Route::get('/sales-order-done', [SalesOrderController::class, 'selesai'])->name(
 Route::get('/monthly-sales-order', [SalesOrderController::class, 'monthly'])->name('monthly-sales-order');
 Route::get('/monthly-sales-order/export-pdf/{month}', [SalesOrderController::class, 'monthlyPdf'])->name('sales-order.monthly-pdf');
 
+Route::get('/test-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return 'Database connection is OK!';
+    } catch (\Exception $e) {
+        return 'Database connection failed: ' . $e->getMessage();
+    }
+});
 
 
 // Route::get('/',function(){return Inertia::render('Welcome',[
