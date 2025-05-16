@@ -1,24 +1,39 @@
-# Gunakan image PHP dengan FPM
-FROM php:8.2-fpm
+# Build frontend (Vue + Inertia) dengan Node
+FROM node:20-alpine as node-build
 
-# Install dependensi OS & ekstensi PHP yang dibutuhkan Laravel
-RUN apt-get update && apt-get install -y \
-    git \
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+
+# Laravel + PHP setup
+FROM php:8.2-fpm-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    bash \
     curl \
+    libpng \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libzip-dev \
     zip \
     unzip \
-    libpng-dev \
-    libonig-dev \
+    oniguruma-dev \
+    icu-dev \
     libxml2-dev \
-    libzip-dev \
-    npm \
+    git \
+    mysql-client \
     nodejs \
-    libpq-dev \
-    libjpeg-dev \
-    libfreetype6-dev
+    npm
 
-# Install ekstensi PHP
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl gd
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath intl
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -26,18 +41,22 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy seluruh project
+# Copy project files
 COPY . .
 
-# Install dependensi Laravel dan build asset Inertia (Vue)
-RUN composer install --no-dev --optimize-autoloader
-RUN npm install && npm run build
+# Copy built frontend from Node image
+COPY --from=node-build /app/public/js /var/www/public/js
+COPY --from=node-build /app/public/css /var/www/public/css
 
-# Set permission Laravel
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Set permissions
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose port (Render akan mengakses dari sini)
+# Run Laravel setup commands
+RUN composer install --no-dev --optimize-autoloader \
+ && php artisan config:cache \
+ && php artisan route:cache \
+ && php artisan view:cache
+
 EXPOSE 8000
 
-# Jalankan Laravel menggunakan PHP built-in server
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
