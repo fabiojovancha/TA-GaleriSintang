@@ -4,7 +4,9 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     server: {
-        base: process.env.VITE_URL || '/',
+        base: process.env.APP_ENV === 'production' 
+        ? 'https://ta-galeri-sintang-production.up.railway.app/' 
+        : '/',
         host: '0.0.0.0',
         port: 5173,
         cors: true,
@@ -26,5 +28,6 @@ export default defineConfig({
                 },
             },
         }),
+        
     ],
 });
