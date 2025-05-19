@@ -12,7 +12,7 @@ class TipeBarang extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'id',
-        'tipeBarang',
+        'nama',
     ];
 
     public function barang()
