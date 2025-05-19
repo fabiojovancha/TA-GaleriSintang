@@ -16,6 +16,8 @@ class Barang extends Model
         'harga_beli',
         'harga_jual',
         'jumlah',
+        'safety_stok',
+        'lead_time',
         'tipe_barang_id',
     ];
 

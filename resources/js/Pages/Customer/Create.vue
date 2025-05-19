@@ -22,11 +22,11 @@ function submitForm() {
 </script>
 
 <template>
-    <Head title="Add Supplier" />
+    <Head title="Add Customer" />
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Add Supplier
+                Add Customer
             </h2>
         </template>
 

@@ -4,26 +4,20 @@ import NavBar from '@/Components/NavBar.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-// Define salesOrder as a prop
 const props = defineProps({
   salesOrder: Object
 });
 
-// Make the salesOrder available locally
 const salesOrder = ref(props.salesOrder);
 
-// Mengambil data sementara untuk stok barang yang tersedia
 const salesOrderDetails = ref(salesOrder.value.details);
 
-// Fungsi untuk menangani perubahan jumlah barang
 const handleQuantityChange = (detail, newQuantity) => {
-  // Validasi jumlah baru dengan stok barang
   if (newQuantity > detail.barang.jumlah) {
     alert('Jumlah tidak boleh melebihi stok barang.');
     return;
   }
 
-  // Jika valid, update jumlah barang
   detail.jumlah = newQuantity;
 };
 </script>
@@ -36,9 +30,9 @@ const handleQuantityChange = (detail, newQuantity) => {
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
           Detail Sales Order - {{ salesOrder.id }}
         </h2>
-        <Link :href="route('sales-order-detail.create', salesOrder.id)" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <!-- <Link :href="route('sales-order-detail.create', salesOrder.id)" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           Add Sales Order Detail
-        </Link>
+        </Link> -->
       </div>
     </template>
 

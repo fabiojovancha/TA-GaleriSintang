@@ -1,6 +1,7 @@
 <script setup>
 import NavBar from '@/Components/NavBar.vue';
 import { Head, Link, router} from '@inertiajs/vue3';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 
 defineProps({
@@ -12,7 +13,7 @@ defineProps({
 
 <template>
     <Head title="Page Tipe" />
-    <NavBar>
+    <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
@@ -46,6 +47,6 @@ defineProps({
                 </div>
             </div>
         </div>
-    </NavBar>
+    </AuthenticatedLayout>
 </template>
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -50,6 +50,15 @@ const totalHarga = computed(() => {
     return form.value.details.reduce((total, item) => {
         return total + (item.jumlah * item.harga_beli);
     }, 0);
+});
+
+watch(() => form.value.pembayaran_id, (newVal) => {
+    const selected = props.pembayaran.find(p => p.id === newVal);
+    if (selected?.tipePembayaran?.toLowerCase() === 'cash') {
+        form.value.status = 'Selesai';
+    } else {
+        form.value.status = 'Process';
+    }
 });
 
 const submitForm = () => {

@@ -77,6 +77,8 @@ class BarangController extends Controller
             'harga_beli'=> 'required|integer|min:0',
             'harga_jual'=> 'required|integer|min:0',
             'jumlah' => 'required|integer|min:0',
+            'safety_stok' => 'required|integer|min:0',
+            'lead_time' => 'required|integer|min:0',
             'tipe_barang_id' => 'required|int|min:0',
         ]);
 

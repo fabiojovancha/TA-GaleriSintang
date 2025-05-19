@@ -15,6 +15,8 @@ const form = useForm({
     harga_jual: '',
     jumlah: '',
     tipe_barang_id: '',
+    lead_time: '',
+    safety_stok: 10
 });
 
 function submitForm() {
@@ -34,7 +36,7 @@ function submitForm() {
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Add Barang
+                Add Baran
             </h2>
         </template>
 
@@ -96,6 +98,18 @@ function submitForm() {
                             required
                         />
                     </div>
+                    <div>
+                        <label for="lead_time" class="block text-sm font-medium text-gray-700">Waktu Pengiriman (hari)</label>
+                        <input
+                            id="lead_time"
+                            v-model="form.lead_time"
+                            type="number"
+                            placeholder="Contoh: 3"
+                            class="border rounded px-4 py-2 w-full"
+                            required
+                        />
+                    </div>
+
                     <div>
                         <label for="tipe_barang_id" class="block text-sm font-medium text-gray-700">Tipe Barang</label>
                         <select

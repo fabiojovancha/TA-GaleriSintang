@@ -6,6 +6,7 @@
     <style>
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         th, td { border: 1px solid #333; padding: 6px; text-align: left; }
+        .text-right { text-align: right; }
     </style>
 </head>
 <body>
@@ -16,7 +17,7 @@
             <tr>
                 <th>ID</th>
                 <th>Tanggal</th>
-                <th>Total Harga</th>
+                <th class="text-right">Total Harga</th>
                 <th>Customer</th>
                 <th>Tipe Pembayaran</th>
                 <th>Status</th>
@@ -26,8 +27,8 @@
             @foreach($orders as $order)
                 <tr>
                     <td>{{ $order->id }}</td>
-                    <td>{{ \Carbon\Carbon::parse($order->tanggal)->locale('id')->isoFormat('MMMM YYYY') }}</td>
-                    <td>Rp. {{ number_format($order->totalHarga, 0, ',', '.') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($order->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}</td>
+                    <td class="text-right">Rp. {{ number_format($order->totalHarga, 0, ',', '.') }}</td>
                     <td>{{ $order->customer->nama ?? 'N/A' }}</td>
                     <td>{{ $order->pembayaran->tipePembayaran ?? 'N/A' }}</td>
                     <td>{{ $order->status }}</td>
@@ -35,10 +36,10 @@
             @endforeach
         </tbody>
     </table>
-    <div style="margin-top: 20px; font-size: 14px;">
+
+    <div style="margin-top: 20px; font-size: 14px; text-align: right;">
         <strong>Total Penjualan: </strong> 
         Rp. {{ number_format($orders->sum('totalHarga'), 0, ',', '.') }}
     </div>
-
 </body>
 </html>

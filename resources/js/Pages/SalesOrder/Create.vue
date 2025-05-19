@@ -1,9 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { computed } from 'vue';
 
 const props = defineProps({
     pembayaran: Array,
@@ -29,6 +28,16 @@ onMounted(() => {
     form.value.tanggal = new Date().toISOString().split('T')[0];
 });
 
+// Watch perubahan pembayaran_id
+watch(() => form.value.pembayaran_id, (newVal) => {
+    const selected = props.pembayaran.find(p => p.id === newVal);
+    if (selected?.tipePembayaran?.toLowerCase() === 'cash') {
+        form.value.status = 'Selesai';
+    } else {
+        form.value.status = 'Process';
+    }
+});
+
 const addItem = () => {
     form.value.details.push({
         barang_id: null,
@@ -41,7 +50,7 @@ const checkStock = (index) => {
     const selected = props.barang.find(b => b.id === form.value.details[index].barang_id);
     if (selected && form.value.details[index].jumlah > selected.jumlah) {
         alert('Jumlah melebihi stok yang tersedia!');
-        form.value.details[index].jumlah = selected.jumlah;  // Reset to max available stock
+        form.value.details[index].jumlah = selected.jumlah;
     }
 };
 
@@ -76,7 +85,7 @@ const submitForm = () => {
 </script>
 
 <template>
-    <Head title="Create Purchase Order" />
+    <Head title="Create Sales Order" />
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">Create Sales Order</h2>
@@ -101,7 +110,7 @@ const submitForm = () => {
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium">customer</label>
+                                <label class="block text-sm font-medium">Customer</label>
                                 <select v-model="form.customer_id" class="w-full p-2 border rounded" required>
                                     <option value="" disabled selected>Pilih</option>
                                     <option v-for="s in props.customer" :value="s.id" :key="s.id">
@@ -129,7 +138,7 @@ const submitForm = () => {
                                         <input type="number" v-model="item.jumlah" min="1" @change="checkStock(index)" class="w-full p-2 border rounded" required />
                                     </div>
                                     <div>
-                                        <label class="text-sm">Harga Beli</label>
+                                        <label class="text-sm">Harga Jual</label>
                                         <input type="number" :value="item.harga_jual" readonly class="w-full p-2 border rounded bg-gray-100" />
                                     </div>
                                     <div class="mt-2">
