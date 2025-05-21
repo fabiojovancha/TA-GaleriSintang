@@ -79,6 +79,7 @@ onMounted(() => {
                   <th>Harga Jual</th>
                   <th>Jumlah</th>
                   <th>Tipe</th>
+                  <th>Waktu Pengiriman</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -92,6 +93,7 @@ onMounted(() => {
                   <td>{{ `Rp ${Number(b.harga_jual).toLocaleString('id-ID')}` }}</td>
                   <td>{{ b.jumlah }}</td>
                   <td>{{ b.tipeBarang ? b.tipeBarang.nama : 'Tipe tidak ditemukan' }}</td>
+                  <td>{{ b.lead_time }}</td>
                   <td>
                     <span v-if="b.butuh_beli" class="text-danger font-weight-bold">
                       Perlu dibeli ({{ b.jumlah_beli }} pcs)
