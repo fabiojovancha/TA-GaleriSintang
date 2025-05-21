@@ -20,9 +20,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-    // if (auth()->user()->role !== 'owner') {
-    //     return redirect()->route('dashboard');
-    // }
+    if (auth()->user()->role !== 'owner') {
+        return redirect()->route('dashboard');
+    }
 
     return Inertia::render('Auth/Register');
     }

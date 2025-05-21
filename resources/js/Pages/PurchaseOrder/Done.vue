@@ -65,7 +65,7 @@ function updateStatusToCompleted(id) {
                                     <td class="py-2 px-4 border">
                                         <div class="flex gap-2">
                                             <PrimaryButton @click="goToDetail(item.id)">
-                                                Detail
+                                                <font-awesome-icon icon="eye"/>
                                             </PrimaryButton>
                                             <a :href="route('purchase-order.pdf', item.id)" target="_blank" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                                                 <font-awesome-icon icon="file-pdf" />

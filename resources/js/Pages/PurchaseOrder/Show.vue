@@ -16,13 +16,13 @@ defineProps({
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
           Detail Purchase Order - {{ purchaseOrder.id }}
         </h2>
-        <Link
+        <!-- <Link
         v-if="purchaseOrder.status !== 'Selesai'"
         :href="route('purchase-order-detail.create', purchaseOrder.id)"
         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
         Add Purchase Order Detail
-      </Link>
+      </Link> -->
       </div>
     </template>
 

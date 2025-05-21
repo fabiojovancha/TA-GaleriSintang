@@ -64,10 +64,10 @@ function deleteCustomer(id) {
                                     <td class="py-2 px-4 border">
                                         <div class="flex gap-2">
                                             <PrimaryButton @click="editCustomer(item)">
-                                                Edit
+                                                <font-awesome-icon icon="pen" class="cursor-pointer" />
                                             </PrimaryButton>
                                             <DangerButton @click="deleteCustomer(item.id)">
-                                                Delete
+                                                <font-awesome-icon icon="trash" class="cursor-pointer" />
                                             </DangerButton>
                                         </div>
                                     </td>
