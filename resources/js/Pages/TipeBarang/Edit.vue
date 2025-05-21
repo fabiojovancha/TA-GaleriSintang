@@ -32,7 +32,7 @@ function submitForm() {
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Edit Supplier
+                Edit Tipe Barang
             </h2>
         </template>
 

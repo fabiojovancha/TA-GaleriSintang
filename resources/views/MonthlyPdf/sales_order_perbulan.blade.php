@@ -2,44 +2,80 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Sales Order Bulan {{ $month }}</title>
+    <title>Laporan Sales Order Bulan {{ $month }}</title>
     <style>
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th, td { border: 1px solid #333; padding: 6px; text-align: left; }
-        .text-right { text-align: right; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            margin: 40px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px 10px;
+        }
+        th {
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        td.text-right {
+            text-align: right;
+        }
+        td.text-center {
+            text-align: center;
+        }
+        .summary {
+            margin-top: 25px;
+            font-size: 14px;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
-    <h2>Sales Order - {{ $month }}</h2>
+
+    <h2>LAPORAN PENJUALAN - BULAN {{ strtoupper($month) }}</h2>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Tanggal</th>
-                <th class="text-right">Total Harga</th>
+                <th>Total Harga</th>
                 <th>Customer</th>
                 <th>Tipe Pembayaran</th>
-                <th>Status</th>
+                <!-- <th>Status</th> -->
             </tr>
         </thead>
         <tbody>
-            @foreach($orders as $order)
+            @forelse($orders as $order)
                 <tr>
-                    <td>{{ $order->id }}</td>
-                    <td>{{ \Carbon\Carbon::parse($order->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}</td>
+                    <td class="text-center">{{ $order->so_id }}</td>
+                    <td class="text-center">{{ \Carbon\Carbon::parse($order->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}</td>
                     <td class="text-right">Rp. {{ number_format($order->totalHarga, 0, ',', '.') }}</td>
                     <td>{{ $order->customer->nama ?? 'N/A' }}</td>
                     <td>{{ $order->pembayaran->tipePembayaran ?? 'N/A' }}</td>
-                    <td>{{ $order->status }}</td>
+                    <!-- <td class="text-center">{{ $order->status }}</td> -->
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="6" class="text-center">Tidak ada data sales order untuk bulan ini.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 
-    <div style="margin-top: 20px; font-size: 14px; text-align: right;">
-        <strong>Total Penjualan: </strong> 
+    <div class="summary">
+        <strong>Total Penjualan:</strong> 
         Rp. {{ number_format($orders->sum('totalHarga'), 0, ',', '.') }}
     </div>
+
 </body>
 </html>

@@ -5,6 +5,15 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { Inertia } from '@inertiajs/inertia';
+import { onMounted } from 'vue';
+
+
+import jQuery from 'jquery';
+window.$ = window.jQuery = jQuery;
+
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+import 'datatables.net-bs5';
+
 
 const props = defineProps({
     salesOrder: Array
@@ -24,6 +33,29 @@ function updateStatusToCompleted(id) {
         Inertia.put(route('sales-order.update-status', id));
     }
 }
+
+onMounted(() => {
+    $('#salesTable').DataTable({
+    paging: true,
+    searching: true,
+    info: true,
+    responsive: true,
+    });
+});
+
+function formatDate(dateString) {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const bulanIndo = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+  const tanggal = date.getDate();
+  const bulan = bulanIndo[date.getMonth()];
+  const tahun = date.getFullYear();
+  return `${tanggal} ${bulan} ${tahun}`;
+}
+
 </script>
 
 <template>
@@ -44,7 +76,7 @@ function updateStatusToCompleted(id) {
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <table class="w-full bg-white border border-gray-200 shadow">
+                        <table id="salesTable" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>
                                     <th class="py-2 px-4 text-left border">ID</th>
@@ -59,7 +91,7 @@ function updateStatusToCompleted(id) {
                             <tbody>
                                 <tr v-for="item in sortedSalesOrder" :key="item.id">
                                     <td class="py-2 px-4 border">{{ item.id }}</td>
-                                    <td class="py-2 px-4 border">{{ item.tanggal }}</td>
+                                    <td class="py-2 px-4 border">{{ formatDate(item.tanggal) }}</td>
                                     <td class="py-2 px-4 border">Rp. {{ (item.totalHarga).toLocaleString('id-ID')}}</td>
                                     <td class="py-2 px-4 border">{{ item.pembayaran ? item.pembayaran.tipePembayaran : 'N/A' }}</td>
                                     <td class="py-2 px-4 border">{{ item.customer ? item.customer.nama : 'N/A' }}</td>

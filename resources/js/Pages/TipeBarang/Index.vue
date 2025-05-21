@@ -59,10 +59,10 @@ function deleteTipeBarang(id) {
                                     <td class="py-2 px-4 border">{{ item.nama }}</td>
                                     <td class="py-2 px-4 border">
                                         <div class="flex gap-2">
-                                            <PrimaryButton @click="edittipeBarang(item)">
+                                            <PrimaryButton @click="editTipeBarang(item)">
                                                 Edit
                                             </PrimaryButton>
-                                            <DangerButton @click="deletetipeBarang(item.id)">
+                                            <DangerButton @click="deleteTipeBarang(item.id)">
                                                 Delete
                                             </DangerButton>
                                         </div>

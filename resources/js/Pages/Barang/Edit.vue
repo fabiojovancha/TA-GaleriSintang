@@ -109,15 +109,22 @@ function submitForm() {
                     </div>
                     <div>
                         <label for="tipe_barang_id" class="block text-sm font-medium text-gray-700">Tipe Barang</label>
-                        <input
+                        <select
                             id="tipe_barang_id"
                             v-model="form.tipe_barang_id"
-                            type="text"
                             class="border rounded px-4 py-2 w-full"
                             required
-                        />
+                        >
+                            <option value="" disabled>Pilih Tipe Barang</option>
+                            <option
+                                v-for="tipe in props.tipeBarang"
+                                :key="tipe.id"
+                                :value="tipe.id"
+                            >
+                                {{ tipe.nama }}
+                            </option>
+                        </select>
                     </div>
-
                     <div class="flex justify-between items-center">
                         <Link :href="route('barang')" class="text-gray-600 hover:underline">Kembali</Link>
                         <button

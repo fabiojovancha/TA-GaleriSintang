@@ -26,5 +26,4 @@ class Barang extends Model
         return $this->belongsTo(TipeBarang::class, 'tipe_barang_id');
     }
     public $timestamps = false;
-
 }
