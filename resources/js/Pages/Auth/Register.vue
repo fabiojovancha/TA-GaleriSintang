@@ -22,6 +22,7 @@ const submit = () => {
 </script>
 
 <template>
+    <AuthenticatedLayout>
         <Head title="Register" />
 
         <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
@@ -106,5 +107,6 @@ const submit = () => {
                 </div>
             </form>
         </div>
+        </AuthenticatedLayout>
 </template>
 
