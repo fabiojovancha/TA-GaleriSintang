@@ -45,6 +45,28 @@ const salesOrderBySelectedMonth = computed(() => {
         return monthYear === selectedMonth.value;
     });
 });
+
+function formatMonthYear(monthKey) {
+    const [year, month] = monthKey.split('-');
+    const bulanIndo = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    return `${bulanIndo[parseInt(month, 10) - 1]} ${year}`;
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const bulanIndo = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const tanggal = date.getDate();
+    const bulan = bulanIndo[date.getMonth()];
+    const tahun = date.getFullYear();
+    return `${tanggal} ${bulan} ${tahun}`;
+}
 </script>
 
 <template>
@@ -75,7 +97,7 @@ const salesOrderBySelectedMonth = computed(() => {
                             </thead>
                             <tbody>
                                 <tr v-for="item in monthlySales" :key="item.month">
-                                    <td class="py-2 px-4 border">{{ item.month }}</td>
+                                    <td class="py-2 px-4 border">{{ formatMonthYear(item.month) }}</td>
                                     <td class="py-2 px-4 border">Rp. {{ item.total.toLocaleString('id-ID') }}</td>
                                     <td class="py-2 px-4 border">
                                     <div class="flex gap-2">
@@ -103,7 +125,7 @@ const salesOrderBySelectedMonth = computed(() => {
                 <div v-if="selectedMonth" class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-semibold">Detail Penjualan Bulan {{ selectedMonth }}</h3>
+                        <h3 class="text-lg font-semibold">Detail Penjualan Bulan {{ formatMonthYear(selectedMonth) }}</h3>
                             <button @click="closeDetail" class="text-red-500 underline">Tutup</button>
                         </div>
 
@@ -120,7 +142,7 @@ const salesOrderBySelectedMonth = computed(() => {
                             <tbody>
                                 <tr v-for="item in salesOrderBySelectedMonth" :key="item.id">
                                     <td class="py-2 px-4 border">{{ item.id }}</td>
-                                    <td class="py-2 px-4 border">{{ item.tanggal }}</td>
+                                    <td class="py-2 px-4 border">{{ formatDate(item.tanggal) }}</td>
                                     <td class="py-2 px-4 border">Rp. {{ item.totalHarga.toLocaleString('id-ID') }}</td>
                                     <td class="py-2 px-4 border">
                                         {{ item.pembayaran ? item.pembayaran.tipePembayaran : 'N/A' }}
