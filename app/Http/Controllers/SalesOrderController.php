@@ -156,7 +156,7 @@ class SalesOrderController extends Controller
         \Carbon\Carbon::setLocale('id');
         $monthName = $date->translatedFormat('F Y');
     
-        $pdf = Pdf::loadView('monthlyPdf.sales_order_perbulan', [
+        $pdf = Pdf::loadView('MonthlyPdf.sales_order_perbulan', [
             'orders' => $orders,
             'month' => $monthName
         ]);
