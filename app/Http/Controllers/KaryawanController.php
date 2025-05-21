@@ -14,4 +14,12 @@ class KaryawanController extends Controller{
         return inertia('Karyawan/Index', [
             'karyawan' => $karyawan
         ]);    }
+
+    public function destroy($id)
+    {
+        $karyawan = User::findOrFail($id);
+        $karyawan->delete();
+
+        return redirect()->route('karyawan')->with('success', 'Karyawan berhasil dihapus.');
+    }
 }

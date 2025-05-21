@@ -20,6 +20,7 @@ use Inertia\Inertia;
 Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('karyawan',[KaryawanController::class, 'index'])->name('karyawan');
+Route::delete('karyawan/{id}',[KaryawanController::class, 'destroy'])->name('karyawan.destroy');
 
 Route::get('/barang',[BarangController::class,'index'])->name('barang');
 Route::get('/barang/create',[BarangController::class,'create'])->name('barang.create');

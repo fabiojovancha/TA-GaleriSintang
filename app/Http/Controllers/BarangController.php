@@ -34,7 +34,7 @@ class BarangController extends Controller
                 $barangData = [
                     'id' => $barang->id,
                     'nama' => $barang->nama,
-                    'stok' => $barang->jumlah,
+                    'jumlah' => $barang->jumlah,
                     'jumlah_beli' => max($jumlah_beli, 1),
                 ];
                 broadcast(new StokBarangMenipis($barangData));
