@@ -48,6 +48,7 @@ class BarangController extends Controller
                 'harga_jual' => $barang->harga_jual,            
                 'deskripsi' => $barang->deskripsi,
                 'tipeBarang' => $barang->tipeBarang,
+                'lead_time' => $barang->lead_time,
                 'rop' => round($rop),                   
                 'butuh_beli' => $butuh_beli,
                 'jumlah_beli' => $butuh_beli ? max($jumlah_beli, 1) : 0,
