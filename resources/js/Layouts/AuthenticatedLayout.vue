@@ -67,9 +67,9 @@ onMounted(() => {
                                 <NavLink :href="route('customer')" :active="route().current('customer')">
                                     Customer
                                 </NavLink>                                
-                                <NavLink :href="route('pembayaran')" :active="route().current('pembayaran')">
+                                <!-- <NavLink :href="route('pembayaran')" :active="route().current('pembayaran')">
                                     Pembayaran
-                                </NavLink>
+                                </NavLink> -->
 
                                 <div class="sm:-my-px inline-flex items-center">
                                 <Dropdown align="left" width="48">
